@@ -1,0 +1,13 @@
+{{#each products}}
+  <div>
+    <h2>{{this.title}}</h2>
+    <p>{{this.description}}</p>
+    <p>{{this.price}}</p>
+  </div>
+{{/each}}
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+ socket.on('updateProducts', function (data) {
+    console.log('Productos actualizados:', data));
+</script>
