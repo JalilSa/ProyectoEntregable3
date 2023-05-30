@@ -1,8 +1,17 @@
-const express = require('express');
+import express from 'express';
+import ProductManager from '../ProductManager.js';
 const router = express.Router();
-const ProductManager = require('../ProductManager');
+import io from '../app.js'
 
 const pm = new ProductManager('productos.json');
+let products = [];
+
+try {
+    const data = fs.readFileSync(path.resolve(__dirname, './productos.json'), 'utf-8');
+    products = JSON.parse(data);
+} catch (err) {
+    console.error('Error', err);
+}
 
 router.get('/', async (req, res) => {
   try {
@@ -46,14 +55,15 @@ router.delete('/:pid', (req, res) => {
   res.send('Producto eliminado');
 });
 
-module.exports = router;
-// Asegúrate de reemplazar 'productos.json' con la ruta correcta a tu archivo JSON de productos.
+export default router;
+
 
 
 // Agrega algunos productos
 pm.addProduct('Producto 1', 'Descripción del producto 1', 10.99, 'https://ruta/imagen1.jpg', 'COD1', 100);
 pm.addProduct('Producto 2', 'Descripción del producto 2', 123.99, 'https://ruta/imagen2.jpg', 'COD2', 100);
 pm.addProduct('Producto 3', 'Descripción del producto 3', 132.99, 'https://ruta/imagen3.jpg', 'COD3', 50);
+
 
 // Muestra todos los productos
 console.log(pm.getProducts());
@@ -68,3 +78,14 @@ console.log(pm.getProductById(1));
 // Elimina un producto
 pm.deleteProduct(2);
 console.log(pm.getProducts());
+
+//Prueba de real time
+
+setTimeout(() => {
+    pm.addProduct('Producto 4', 'Descripción del producto 4', 10.99, 'https://ruta/imagen4.jpg', 'COD4', 100);
+    pm.addProduct('Producto 5', 'Descripción del producto 5', 123.99, 'https://ruta/imagen5.jpg', 'COD5', 100);
+    pm.addProduct('Producto 6', 'Descripción del producto 6', 132.99, 'https://ruta/imagen6.jpg', 'COD6', 50);
+    products = pm.getProducts();
+    io.emit('updateProducts', products);
+
+}, 5000);

@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
+import CartManager from '../CartManager.js';
 const router = express.Router();
-const CartManager = require('../CartManager');
 
 const cm = new CartManager('carrito.json');
 
@@ -46,8 +46,8 @@ router.delete('/:pid', (req, res) => {
     res.status(500).send('Error al eliminar el producto del carrito');
   }
 });
+export default router;
 
-module.exports = router;
 
 cm.addItem({ pid: 1, quantity: 3 });  // Agrega 3 unidades del producto con id 1 al carrito
 cm.addItem({ pid: 2, quantity: 5 });  // Agrega 5 unidades del producto con id 2 al carrito
